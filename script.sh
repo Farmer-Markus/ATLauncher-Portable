@@ -14,6 +14,21 @@ if [ -e $mountpoint/ATLauncher-Portable ]
 
        mounted=0
 fi
+sh_help () {
+  echo 'sh Options                           Description'
+  echo '----------                           -----------'
+  echo '--use-internal-jar                   Uses internal ATLauncher.jar'
+  echo '                                     (you need to recompile sh for Updates,'
+  echo '                                     need to be used as first option!)'
+  echo ''
+  echo '--mount                              Mounts the dwarfs filesystem in'
+  echo '                                     '$mountpoint''
+  echo ''
+  $mountpoint/ATLauncher-Portable/mnt/java-runtime-17/bin/java -jar /tmp/ATLauncher-Portable/mnt/ATLauncher/ATLauncher.jar --help
+  umount /tmp/ATLauncher-Portable/mnt
+  rm -r /tmp/ATLauncher-Portable
+  exit
+}
 Begin_dwarfs_universal=`awk '/^#__Begin_dwarfs_universal__/ {print NR + 1; exit 0; }' $scriptdir/$scriptname`
 End_dwarfs_universal=`awk '/^#__End_dwarfs_universal__/ {print NR - 1; exit 0; }' $scriptdir/$scriptname`
 
@@ -27,25 +42,7 @@ if [ "$mounted" == "0" ]
        $mountpoint/ATLauncher-Portable/mount-tools/dwarfs-universal-0.7.3-Linux-x86_64 --tool=dwarfs $scriptdir/$scriptname $mountpoint/ATLauncher-Portable/mnt -o offset=$offset
 fi
 
-if [ "$1" == "--help" ]
-   then
-
-       echo 'sh Options                           Description'
-       echo '----------                           -----------'
-       echo '--use-internal-jar                   Uses internal ATLauncher.jar'
-       echo '                                     (you need to recompile sh for Updates,'
-       echo '                                     need to be used as first option!)'
-       echo ''
-       echo '--mount                              Mounts the dwarfs filesystem in'
-       echo '                                     '$mountpoint''
-       echo ''
-
-       $mountpoint/ATLauncher-Portable/mnt/java-runtime-17/bin/java -jar /tmp/ATLauncher-Portable/mnt/ATLauncher/ATLauncher.jar $1
-
-       umount /tmp/ATLauncher-Portable/mnt
-       rm -r /tmp/ATLauncher-Portable
-       exit
-fi
+if [ "$1" == "--help" ]; then sh_help; fi; if [ "$1" == "-?" ]; then sh_help; fi
 
 if [ "$1" == "--mount" ]
    then
