@@ -7,4 +7,4 @@ All portable Apps are based on [dwarfs](https://github.com/mhx/dwarfs), to compr
 
 I want to make portable apps with all includet dependencies like: <br />
 [Lutris-Portable](https://github.com/Farmer-Markus/Lutris-Portable) <br />
-[Lutris-Portable](https://github.com/Farmer-Markus/s25-RTTR-Portable) <br />
+[Settlers 2 RTTR-Portable](https://github.com/Farmer-Markus/s25-RTTR-Portable) <br />
