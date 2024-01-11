@@ -36,7 +36,7 @@ sh_help () {
   echo '--mount                              Mounts the dwarfs filesystem in '$mountpoint''
   echo '                                     (can be used with <--mountpoint>)'
   echo ''
-  echo '--mountpoint=<path>                  Defines the mount location for the dwarfs'
+  echo '--mountpoint=<full path>             Defines the mount location for the dwarfs'
   echo '                                     image.(Default mountpoint: </tmp>)'
   echo ''
   echo '--install                            Moves the image into your .local/share'
@@ -87,7 +87,7 @@ sh_install () {
   if [ -e ~/.local/share/ATLauncher-Portable ]
      then
 
-         echo -e "\033[1;31mFolder RTTR-Portable already exists in ~/.local/share\033[0;38m"
+         echo -e "\033[1;31mFolder ATLauncher-Portable already exists in ~/.local/share\033[0;38m"
          if [ ! -e ~/.local/share/applications/ATLauncher.desktop ]; then sh_create_entry && echo -e "\033[1;32mFixed missing desktop entry\033[0;38m"; fi
          echo -e "\033[1;31mCan't install in ~/.local/share\033[0;38m"
          echo -e "\033[1;31mAlready installed\033[0;38m"
@@ -118,7 +118,7 @@ sh_install () {
          sh_create_entry
          echo -e "\033[1;32mDone\033[0;38m"
          sh_unmount
-         echo -e "\033[1;32mFinished installing RTTR in ~/.local/share...\033[0;38m"
+         echo -e "\033[1;32mFinished installing ATLauncher in ~/.local/share...\033[0;38m"
 fi
 }
 
