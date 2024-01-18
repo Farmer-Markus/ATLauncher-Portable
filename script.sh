@@ -25,8 +25,8 @@ fi
 sh_unmount () {
   umount "$mountpoint/ATLauncher-Portable/mnt"
   rm -r "$mountpoint/ATLauncher-Portable"
-  rm -f "$workdir/runtimes/minecraft/java-runtime-gamma/linux/java-runtime-gamma"
-  rm -r "$workdir/runtimes"
+  rm "$workdir/runtimes/minecraft/java-runtime-gamma/linux/java-runtime-gamma"
+  rm -rf "$workdir/runtimes"
 }
 
 sh_help () {
@@ -46,6 +46,9 @@ sh_help () {
   echo ''
   echo '--working-dir=<string>               This forces the working directory for the'
   echo '				     launcher.'
+  echo ''
+  echo '--audio=<string>                     Forces the audio driver for alsoft'
+  echo '                                     (can be usefull against crashes using pipewire)'
   echo '-------------------------------------------------------------------------------'
   "$mountpoint/ATLauncher-Portable/mnt/java-runtime-17/bin/java" -jar "$mountpoint/ATLauncher-Portable/mnt/ATLauncher/ATLauncher.jar" --help | sed '/--working-dir/,+1 d' #removing the --working-dir option of the launcher help.(some issues with spaces in working-dir path)
   umount "$mountpoint/ATLauncher-Portable/mnt"
@@ -94,7 +97,7 @@ sh_install () {
      then
 
          echo -e "\033[1;31mFolder ATLauncher-Portable already exists in ~/.local/share\033[0;38m"
-         if [ ! -e ~/.local/share/applications/ATLauncher.desktop ]; then sh_create_entry && echo -e "\033[1;32mFixed missing desktop entry\033[0;38m"; fi
+         if [ ! -e ~/.local/share/applications/atlauncher-portable.desktop ]; then sh_create_entry && echo -e "\033[1;32mFixed missing desktop entry\033[0;38m"; fi
          echo -e "\033[1;31mCan't install in ~/.local/share\033[0;38m"
          echo -e "\033[1;31mAlready installed\033[0;38m"
          echo -e "\033[1;31mWould you like to uninstall? All data will be removed![Y/n]\033[0;38m"
@@ -119,26 +122,33 @@ sh_install () {
          mkdir -p ~/.local/share/ATLauncher-Portable
          cp "$scriptdir/$scriptname" ~/.local/share/ATLauncher-Portable
          cp "$mountpoint/ATLauncher-Portable/mnt/install/ATLauncher.png" ~/.local/share/ATLauncher-Portable/
-         if [ -e ~/.local/share/applications/atlauncher.desktop ]; then rm ~/.local/share/applications/atlauncher.desktop; fi
+         if [ -e ~/.local/share/applications/atlauncher-portable.desktop ]; then rm ~/.local/share/applications/atlauncher-portable.desktop; fi
          echo -e "\033[1;32mCreating desktop entry...\033[0;38m"
          sh_create_entry
          echo -e "\033[1;32mDone\033[0;38m"
          sh_unmount
-         echo -e "\033[1;32mFinished installing ATLauncher in ~/.local/share...\033[0;38m"
+         echo -e "\033[1;32mFinished installing ATLauncher in ~/.local/share.\033[0;38m"
 fi
 }
 
 sh_create_entry () {
-  echo '[Desktop Entry]'							   	 >> ~/.local/share/applications/atlauncher.desktop
-  echo 'Name=ATLauncher'							   	 >> ~/.local/share/applications/atlauncher.desktop
-  echo 'Exec='$HOME'/.local/share/ATLauncher-Portable/ATLauncher-Portable.sh' 	         >> ~/.local/share/applications/atlauncher.desktop
-  echo 'Type=Application'							   	 >> ~/.local/share/applications/atlauncher.desktop
-  echo 'Keywords=game;Minecraft;'							 >> ~/.local/share/applications/atlauncher.desktop
-  echo 'Categories=Games;'						 		 >> ~/.local/share/applications/atlauncher.desktop
-  echo 'Comment=A launcher for Minecraft which integrates multiple different modpacks to allow you to download and install modpacks easily and quickly.'     	  								 >> ~/.local/share/applications/atlauncher.desktop
-  echo 'StartupNotify=true'								 >> ~/.local/share/applications/atlauncher.desktop
-  echo 'Terminal=false'									 >> ~/.local/share/applications/atlauncher.desktop
-  echo 'Icon='$HOME'/.local/share/ATLauncher-Portable/ATLauncher.png'			 >> ~/.local/share/applications/atlauncher.desktop
+  echo '[Desktop Entry]'								>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Name=ATLauncher'								>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Exec='$HOME'/.local/share/ATLauncher-Portable/ATLauncher-Portable.sh'		>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Type=Application'								>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Keywords=game;Minecraft;'							>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Categories=Games;'								>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Comment=A portable version of a launcher for Minecraft which integrates multiple different modpacks to allow you to download and install modpacks easily and quickly.'										>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Comment[de]=Eine portable Version von einem Launcher für Minecraft, der es erlaubt Modpacks einfach und schnell herunterzuladen und zu installieren.'									>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'StartupNotify=true'								>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Terminal=false'									>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Icon='$HOME'/.local/share/ATLauncher-Portable/ATLauncher.png'			>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Actions=alsa-driver;'								>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo ''										>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo '[Desktop Action alsa-driver]'							>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Name=Use alsa audio driver'							>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Name[de]=Alsa Audiotreiber benutzen'						>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Exec='$HOME'/.local/share/ATLauncher-Portable/ATLauncher-Portable.sh --audio=alsa'	>> ~/.local/share/applications/atlauncher-portable.desktop
 }
 
 sh_uninstall () {
@@ -153,9 +163,9 @@ sh_uninstall () {
   sleep 1s
   
   echo -e "\033[1;32mRemoving data...\033[0;38m"
-  rm -r ~/.local/share/ATLauncher-Portable
+  rm -rf ~/.local/share/ATLauncher-Portable
   echo -e "\033[1;32mRemoving desktop entry...\033[0;38m"
-  rm ~/.local/share/applications/atlauncher.desktop
+  rm ~/.local/share/applications/atlauncher-portable.desktop
   echo -e "\033[1;32mFully uninstalled ATLauncher in ~/.local/share\033[0;38m"
 }
 #Scriptstart#
@@ -178,6 +188,9 @@ case $i in
     --working-dir=*)
     workdir="${i#*=}"
     ;;
+    --audio=*)
+    audiodriver="${i#*=}"
+    ;;
     --install)
     install=1
     ;;
@@ -189,6 +202,7 @@ done
 
 if [ "$help" == "1" ]; then sh_mount && sh_help; fi
 if [ "$install" == "1" ]; then sh_install && exit; fi
+if [ ! "$audiodriver" == "" ]; then export ALSOFT_DRIVERS="$audiodriver"; fi
 if [[ "$internaljar" == "1" && "$mount" = "1" ]]; then echo -e "\033[1;31mCan't use this options together!\033[0;38m"; fi
 if [[ "$internaljar" == "1" && "$mount" = "" ]]; then sh_mount && sh_internal_jar && sh_unmount; fi
 if [[ "$internaljar" == "" && "$mount" = "" ]]; then sh_mount && sh_external_jar && sh_unmount; fi
