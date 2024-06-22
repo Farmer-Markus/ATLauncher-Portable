@@ -25,8 +25,6 @@ fi
 sh_unmount () {
   umount "$mountpoint/ATLauncher-Portable/mnt"
   rm -r "$mountpoint/ATLauncher-Portable"
-  rm "$workdir/runtimes/minecraft/java-runtime-gamma/linux/java-runtime-gamma"
-  rm -rf "$workdir/runtimes"
 }
 
 sh_help () {
@@ -75,8 +73,6 @@ fi
 
 sh_internal_jar () {
   echo -e "\033[1;32mUsing internal jar\033[0;38m"
-  mkdir -p "$workdir/runtimes/minecraft/java-runtime-gamma/linux"
-  ln -s "$mountpoint/ATLauncher-Portable/mnt/java-runtime-17" "$workdir/runtimes/minecraft/java-runtime-gamma/linux/java-runtime-gamma"
   "$mountpoint/ATLauncher-Portable/mnt/java-runtime-17/bin/java" -jar "$mountpoint/ATLauncher-Portable/mnt/ATLauncher/ATLauncher.jar" --no-launcher-update $workdiroption "$workdir" "$atargs"
 }
 
@@ -87,8 +83,6 @@ sh_external_jar () {
 
          cp "$mountpoint/ATLauncher-Portable/mnt/ATLauncher/ATLauncher.jar" "$workdir"
 fi
-  mkdir -p "$workdir/runtimes/minecraft/java-runtime-gamma/linux"
-  ln -s "$mountpoint/ATLauncher-Portable/mnt/java-runtime-17" "$workdir/runtimes/minecraft/java-runtime-gamma/linux/java-runtime-gamma"
   "$mountpoint/ATLauncher-Portable/mnt/java-runtime-17/bin/java" -jar "$workdir/ATLauncher.jar" $workdiroption "$workdir" "$atargs"
 }
 
@@ -139,7 +133,7 @@ sh_create_entry () {
   echo 'Keywords=game;Minecraft;'							>> ~/.local/share/applications/atlauncher-portable.desktop
   echo 'Categories=Games;'								>> ~/.local/share/applications/atlauncher-portable.desktop
   echo 'Comment=A portable version of a launcher for Minecraft which integrates multiple different modpacks to allow you to download and install modpacks easily and quickly.'										>> ~/.local/share/applications/atlauncher-portable.desktop
-  echo 'Comment[de]=Eine portable Version von einem Launcher für Minecraft, der es erlaubt Modpacks einfach und schnell herunterzuladen und zu installieren.'									>> ~/.local/share/applications/atlauncher-portable.desktop
+  echo 'Comment[de]=Eine portable Version von einem Launcher für Minecraft, der es erlaubt Modpacks einfach und schnell herunterzuladen und zu installieren.'>> ~/.local/share/applications/atlauncher-portable.desktop
   echo 'StartupNotify=true'								>> ~/.local/share/applications/atlauncher-portable.desktop
   echo 'Terminal=false'									>> ~/.local/share/applications/atlauncher-portable.desktop
   echo 'Icon='$HOME'/.local/share/ATLauncher-Portable/ATLauncher.png'			>> ~/.local/share/applications/atlauncher-portable.desktop
